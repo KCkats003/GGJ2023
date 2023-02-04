@@ -6,9 +6,12 @@ public class SeedButton : MonoBehaviour
 {
     [SerializeField]
     private SeedGenerator seedGenerator;
+    [SerializeField]
+    private SeedType seedType;
+
     public void Click()
     {
-        seedGenerator.BeginDrag();
+        seedGenerator.BeginDrag(seedType);
     }
 
 }

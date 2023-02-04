@@ -18,5 +18,9 @@ public class ResourceType
     {
         return name + ": " + value;
     }
+    public ResourceType Clone()
+    {
+        return new ResourceType(color, name, value);
+    }
 
 }

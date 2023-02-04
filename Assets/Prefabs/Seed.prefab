@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 06758ae8a09e4ff4e948e6e94aae9d51, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,10 +102,6 @@ MonoBehaviour:
   root: {fileID: 3509755802999416344, guid: d4d5c7b95fe0dd044b8a7f98bb185c86, type: 3}
   seedSpawner: {fileID: 0}
   distance: 3
-  outputResource:
-    color: {r: 0, g: 0, b: 0, a: 0}
-    name: 
-    value: 0
 --- !u!58 &8974962604648098804
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -343,7 +339,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 4
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:

@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8653022956624910077
 RectTransform:
   m_ObjectHideFlags: 0
@@ -255,6 +255,7 @@ MonoBehaviour:
   requiredAmount: 60
   currentAmount: 0
   circle: {fileID: 0}
+  seedGenerator: {fileID: 0}
 --- !u!4 &2867374344651812442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1629775244328135136, guid: 83bbe1c10b50fa74f9dc1ab077e580eb, type: 3}

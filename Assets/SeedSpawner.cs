@@ -10,15 +10,29 @@ public class SeedSpawner : MonoBehaviour
     private GameObject baseSeed;
 
     [SerializeField]
+    private GameObject transportSeed;
+
+    [SerializeField]
     private SeedType seedType;
+
+    public bool hasWater = false;
 
     void Start()
     {
-        CreateBaseSeed(Vector2.zero);
+        GameObject baseSeed = CreateBaseSeed(Vector2.zero);
+        //baseSeed.GetComponent<SeedScript>().Sprout(3, new SeedType(SeedType.DefaultColor, SeedType.Types.Default), new Vector2(0, 1));
     }
     public GameObject CreateSeed(Vector2 position, SeedType seedType)
     {
-        GameObject newSeed = Instantiate(seed, position, Quaternion.identity);
+        GameObject newSeed;
+        if (seedType.type == SeedType.Types.Transport)
+        {
+            newSeed = Instantiate(transportSeed, position, Quaternion.identity);
+        }
+        else
+        {
+            newSeed = Instantiate(seed, position, Quaternion.identity);
+        }
         newSeed.transform.parent = transform;
         newSeed.GetComponent<SeedScript>().setSeedSpawner(this);
         newSeed.GetComponent<SeedScript>().setSeedType(seedType);

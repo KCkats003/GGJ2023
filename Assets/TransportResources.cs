@@ -9,7 +9,12 @@ public class TransportResources : MonoBehaviour
     public SeedScript seedScript;
     public SeedScript inputSeed;
 
+    private LineRenderer lineRenderer;
     private bool isDragging = false;
+
+    void Start(){
+        lineRenderer = GetComponentInChildren<LineRenderer>();
+    }
 
     void OnMouseDown()
     {
@@ -25,6 +30,8 @@ public class TransportResources : MonoBehaviour
         if (isDragging){
             Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
             Vector3 objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+            lineRenderer.SetPosition(0, (objPosition-transform.position)*2f);
+
             if (Input.GetMouseButtonUp(0)){
                 isDragging = false;
                 // Check for collision with a seed
@@ -37,6 +44,10 @@ public class TransportResources : MonoBehaviour
                     inputSeed = seed.GetComponent<SeedScript>();
                 }
             }
+        } else if (inputSeed != null){
+            lineRenderer.SetPosition(0, (inputSeed.transform.position-transform.position)*2f);
+        } else {
+            lineRenderer.SetPosition(0, Vector3.zero);
         }
     }
 
@@ -53,5 +64,6 @@ public class TransportResources : MonoBehaviour
         return false;
     }
 
+    
 
 }

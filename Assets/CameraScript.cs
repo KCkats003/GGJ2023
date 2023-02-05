@@ -43,6 +43,10 @@ public class CameraScript : MonoBehaviour
 
     public void UpdateTarget(int stage)
     {
+        if (stage >= cameraPositions.Length)
+        {
+            return;
+        }
         target = cameraPositions[stage].target;
         targetSize = cameraPositions[stage].size;
     }

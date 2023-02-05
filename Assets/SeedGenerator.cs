@@ -13,6 +13,9 @@ public class SeedGenerator : MonoBehaviour
     private SeedButton[] seedButtons;
     [SerializeField]
     private SeedUnlocker seedUnlocker;
+    
+    [SerializeField]
+    private FinalObjective finalObjective;
 
     private Transform previewA;
     private bool hasWater = false;
@@ -63,7 +66,12 @@ public class SeedGenerator : MonoBehaviour
                         isDragging = false;
                         return;
                     }
-                    hasWater = true;
+                    if (hasWater == false){
+                        hasWater = true;
+                        GetComponent<AudioSource>().Play();
+                    }
+                    
+                    
                     
                     SeedScript ss = seed.GetComponent<SeedScript>();
                     if (seedType.type == SeedType.Types.Transport && ss.getSeedType().type == SeedType.Types.Transport){
@@ -152,6 +160,7 @@ public class SeedGenerator : MonoBehaviour
             sb.AddResource(rt);
         }
         seedUnlocker.CheckAdvanceStage(rt);
+        finalObjective.AddResource(rt);
     }
 
     void OnDrawGizmos()

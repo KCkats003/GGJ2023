@@ -69,11 +69,14 @@ public class SeedScript : MonoBehaviour
     [SerializeField]
     public ArrayList outputResources = new ArrayList();
 
+    private float popupspeed = 0.5f;
+
     // Start is called before the first frame update
     void Start()
     {
         ps = transform.GetChild(0).GetComponent<ParticleSystem>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
     }
 
     // Update is called once per frame
@@ -82,6 +85,11 @@ public class SeedScript : MonoBehaviour
         if (seedType.type != SeedType.Types.Input){
             spriteRenderer.color = seedType.color;
         }
+        if (transform.localScale.x < 0.5f)
+        {
+            transform.localScale += new Vector3(popupspeed, popupspeed, popupspeed) * Time.deltaTime;
+        }
+
         
     }
 
@@ -132,7 +140,7 @@ public class SeedScript : MonoBehaviour
         ps = transform.GetChild(0).GetComponent<ParticleSystem>();
 
         setParentSeed(parentSeed);
-        
+
         full = false;
         
         GameObject nearestCrystal = SeedGenerator.GetNearestCrystal(transform.position);
@@ -182,11 +190,13 @@ public class SeedScript : MonoBehaviour
         }
     }
 
-    public void AddInputResource(ResourceType rt)
+    public void AddInputResource(ResourceType rt, int depth = 50)
     {
+        if (depth <= 0) { return; }
+        depth--;
         Debug.Log("Adding input resource: " + rt.name + " " + rt.value);
         bool found = false;
-        foreach (ResourceType ir in inputResources)
+        foreach (ResourceType ir in inputResources.ToArray())
         {
             if (ir.name == rt.name)
             {
@@ -199,22 +209,29 @@ public class SeedScript : MonoBehaviour
         {
             inputResources.Add(rt);
         }
+
         outputResources.Clear();
-        foreach (ResourceType ir in inputResources)
+        foreach (ResourceType ir in inputResources.ToArray())
         {
             outputResources.Add(ir.Clone());
+        }
+
+        if (seedType.type == SeedType.Types.Synthesis){
+            CheckSynthesis();
         }
 
         UpdateOutputResource();
         if (outputSeed != null)
         {
-            outputSeed.AddInputResource(rt.Clone());
+            outputSeed.AddInputResource(rt.Clone(), depth);
         }
     }
 
-    public void RemoveInputResource(ResourceType rt)
+    public void RemoveInputResource(ResourceType rt, int depth = 50)
     {
-        foreach (ResourceType ir in inputResources)
+        if (depth <= 0) { Debug.LogWarning("Avoiding Stack Overflow!"); return; }
+        depth--;
+        foreach (ResourceType ir in inputResources.ToArray())
         {
             if (ir.name == rt.name)
             {
@@ -227,7 +244,7 @@ public class SeedScript : MonoBehaviour
             }
         }
         outputResources.Clear();
-        foreach (ResourceType ir in inputResources)
+        foreach (ResourceType ir in inputResources.ToArray())
         {
             outputResources.Add(ir.Clone());
         }
@@ -235,7 +252,20 @@ public class SeedScript : MonoBehaviour
         UpdateOutputResource();
         if (outputSeed != null)
         {
-            outputSeed.RemoveInputResource(rt.Clone());
+            outputSeed.RemoveInputResource(rt.Clone(), depth);
+        }
+    }
+
+    public void RemoveInputResourceByString(string name, int amount)
+    {
+        foreach (ResourceType ir in inputResources.ToArray())
+        {
+            if (ir.name == name)
+            {
+                var res = ir.Clone();
+                res.value = amount;
+                RemoveInputResource(res);
+            }
         }
     }
 
@@ -268,6 +298,57 @@ public class SeedScript : MonoBehaviour
             var main = ps.main;
             main.startLifetime = Vector3.Distance(outputSeed.transform.position, transform.position) / 4.0f - 0.1f;
         }
+    }
+
+    void CheckSynthesis(){
+        // Checks if certain combinations of input resources are present and synthesizes them into a new resource
+        string[] combo1 = new string[] { "Water", "Leaf" };
+        string[] combo2 = new string[] { "Flower", "Light" };
+
+        // Check for combo 1
+        bool combo1Found = true;
+        foreach (string s in combo1){
+            bool found = false;
+            foreach (ResourceType rt in inputResources){
+                if (rt.name == s){
+                    found = true;
+                    break;
+                }
+            }
+            if (!found){
+                combo1Found = false;
+                break;
+            }
+        }
+        if (combo1Found){
+            foreach (string s in combo1){
+                RemoveInputResourceByString(s, 1);
+            }
+            AddInputResource(new ResourceType(Color.white, "Sugar", 1));
+        }
+        // Check for combo 2
+        bool combo2Found = true;
+        foreach (string s in combo2){
+            bool found = false;
+            foreach (ResourceType rt in inputResources){
+                if (rt.name == s){
+                    found = true;
+                    break;
+                }
+            }
+            if (!found){
+                combo2Found = false;
+                break;
+            }
+        }
+        if (combo2Found){
+            foreach (string s in combo2){
+                RemoveInputResourceByString(s, 1);
+            }
+            AddInputResource(new ResourceType(new Color((63f/255f), (53f/255f), (204f/255f)), "Fruit", 1));
+        }
+
+
     }
 
 }

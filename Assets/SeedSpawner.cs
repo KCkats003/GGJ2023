@@ -13,6 +13,9 @@ public class SeedSpawner : MonoBehaviour
     private GameObject transportSeed;
 
     [SerializeField]
+    private GameObject synthesisSeed;
+
+    [SerializeField]
     private SeedType seedType;
 
     public bool hasWater = false;
@@ -28,6 +31,10 @@ public class SeedSpawner : MonoBehaviour
         if (seedType.type == SeedType.Types.Transport)
         {
             newSeed = Instantiate(transportSeed, position, Quaternion.identity);
+        }
+        else if (seedType.type == SeedType.Types.Synthesis)
+        {
+            newSeed = Instantiate(synthesisSeed, position, Quaternion.identity);
         }
         else
         {

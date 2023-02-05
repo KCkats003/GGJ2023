@@ -12,6 +12,7 @@ public class SeedUnlocker : MonoBehaviour
         public string requiredResource;
         public float amount;
         
+        
 
 
         public SeedUnlock(SeedType seedType, string requiredResource, float amount)
@@ -22,7 +23,15 @@ public class SeedUnlocker : MonoBehaviour
         }
     }
 
+    public AudioSource[] songs;
+
     public CameraScript cameraScript;
+
+    [SerializeField]
+    private TreeScript treeScript;
+
+    [SerializeField]
+    private FinalObjective finalObjective;
 
     [SerializeField]
     private SeedUnlock[] seedUnlocks = {
@@ -31,13 +40,19 @@ public class SeedUnlocker : MonoBehaviour
         new SeedUnlock(new SeedType(SeedType.DefaultColor, SeedType.Types.Synthesis), "Light", 30),
         new SeedUnlock(new SeedType(SeedType.InputColor, SeedType.Types.Input), "Energy", 50)
     };
+    public int stage = 0;
 
     private string[] stages = {
         "Water",
         "Leaf",
         "Flower",
+        "Sugar",
+        "None"
         };
 
+    void Start(){
+        treeScript.UpdateSprite(stage);
+    }
     public void CheckAdvanceStage(ResourceType rt)
     {
         if (rt.name == stages[stage])
@@ -46,12 +61,25 @@ public class SeedUnlocker : MonoBehaviour
         }
     }
 
-    public int stage = 0;
+    void Update(){
+        for (int i=1;i<=stage; i++){
+            if (i>=5) break;
+            if (songs[i].volume < 1f){
+                songs[i].volume += Time.deltaTime * 0.1f;
+            }
+        }
+    }
     public SeedUnlock NextStage()
     {
         SeedUnlock output = seedUnlocks[stage];
         cameraScript.UpdateTarget(stage);
         stage++;
+        treeScript.UpdateSprite(stage);
+
+        if (stage==4){
+            finalObjective.active = true;
+        }
+
         return output;
     }
 
